@@ -180,9 +180,12 @@ class Installer:
 		else:
 			info(str(_('Skipping waiting for automatic time sync (this can cause issues if time is out of sync during installation)')))
 
-		info('Waiting for automatic mirror selection (reflector) to complete.')
-		while self._service_state('reflector') not in ('dead', 'failed', 'exited'):
-			time.sleep(1)
+		if platform.machine() != 'loongarch64':
+			info('Waiting for automatic mirror selection (reflector) to complete.')
+			while self._service_state('reflector') not in ('dead', 'failed', 'exited'):
+				time.sleep(1)
+		else:
+			info('This platform does not support reflector, skipping waiting for automatic mirror selection.')
 
 		# info('Waiting for pacman-init.service to complete.')
 		# while self._service_state('pacman-init') not in ('dead', 'failed', 'exited'):
